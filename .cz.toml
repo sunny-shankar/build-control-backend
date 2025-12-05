@@ -1,0 +1,89 @@
+[tool.commitizen]
+name = "cz_customize"
+version = "0.1.0"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_files = [
+    "pyproject.toml:version",
+    "src/__version__.py"
+]
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}{% if scope %}({{scope}}){% endif %}{% if is_breaking_change %}!{% endif %}: {{subject}}{% if body %}\n\n{{body}}{% endif %}{% if footer %}\n\n{{footer}}{% endif %}"
+
+example = "feat(api): add user authentication endpoint"
+
+schema = """
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+"""
+
+schema_pattern = "^(feat|fix|refactor|perf|docs|style|test|build|ci|chore|revert|security|db)(\\(\\w+\\))?!?: .{3,72}"
+
+bump_pattern = "^(feat|fix|refactor|perf|security)"
+bump_map = { "feat" = "MINOR", "fix" = "PATCH", "perf" = "PATCH", "refactor" = "PATCH", "security" = "PATCH" }
+
+change_type_order = [
+    "feat",
+    "fix",
+    "refactor",
+    "perf",
+    "security",
+    "docs",
+    "style",
+    "test",
+    "build",
+    "ci",
+    "chore",
+    "revert",
+    "db"
+]
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+message = "Select the type of change you're committing"
+choices = [
+    { value = "feat", name = "✨ feat:     A new feature", key = "f" },
+    { value = "fix", name = "🐛 fix:      A bug fix", key = "x" },
+    { value = "refactor", name = "♻️  refactor: Code refactoring", key = "r" },
+    { value = "perf", name = "⚡ perf:     Performance improvement", key = "p" },
+    { value = "docs", name = "📚 docs:     Documentation changes", key = "d" },
+    { value = "style", name = "💎 style:    Code style changes", key = "s" },
+    { value = "test", name = "✅ test:     Testing changes", key = "t" },
+    { value = "build", name = "📦 build:    Build system changes", key = "b" },
+    { value = "ci", name = "🔧 ci:       CI/CD changes", key = "c" },
+    { value = "chore", name = "🔨 chore:    Maintenance tasks", key = "h" },
+    { value = "revert", name = "⏪ revert:   Revert previous commit", key = "v" },
+    { value = "security", name = "🔒 security: Security fixes", key = "u" },
+    { value = "db", name = "🗄️  db:       Database changes", key = "a" }
+]
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "scope"
+message = "What is the scope of this change? (press enter to skip)"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "subject"
+message = "Write a short, imperative description (3-72 chars):"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "body"
+message = "Provide additional context (press enter to skip):"
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "is_breaking_change"
+message = "Is this a BREAKING CHANGE?"
+default = false
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "footer"
+message = "Footer (e.g., closes #123, BREAKING CHANGE: description):"
