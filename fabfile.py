@@ -13,4 +13,4 @@ def start(c):
 
 @task
 def commit(c):
-    c.run("uv run cz commit")
+    c.run("uv run cz commit", pty=True)
