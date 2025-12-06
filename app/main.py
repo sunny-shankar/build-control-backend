@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.common.exceptions import register_exception_handlers
+from app.common.schemas import ApiResponse
 from app.core.config import settings
 
 
@@ -26,3 +27,11 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+
+@app.get("/health", tags=["Health"], response_model=ApiResponse)
+async def health_check():
+    """Health check endpoint."""
+    return ApiResponse(
+        data={"status": "ok"},
+    )
