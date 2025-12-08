@@ -16,5 +16,5 @@ class UserRepository(BaseRepository[User]):
 
     async def get_by_mobile(self, mobile: str) -> Optional["User"]:
         """Get user by mobile number."""
-        results = await self.get_by_filters(mobile=mobile)
+        results = await self.get_by_filters(mobile_number=mobile)
         return results[0] if results else None
