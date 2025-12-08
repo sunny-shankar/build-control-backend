@@ -3,7 +3,8 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.common.exceptions import register_exception_handlers
 from app.common.schemas import ApiResponse
-from app.core.config import settings
+from app.core import settings
+from app.router.api import router
 
 
 def create_app() -> FastAPI:
@@ -22,7 +23,7 @@ def create_app() -> FastAPI:
     )
 
     register_exception_handlers(app)
-
+    app.include_router(router=router)
     return app
 
 

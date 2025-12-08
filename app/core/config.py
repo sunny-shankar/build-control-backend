@@ -1,11 +1,10 @@
-from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.common.constants import Environment
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: PostgresDsn
+    DATABASE_URL: str
 
     ENVIRONMENT: Environment = Environment.DEVELOPMENT
 
