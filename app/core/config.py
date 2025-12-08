@@ -1,10 +1,11 @@
-from pydantic_settings import BaseSettings
+from pydantic import PostgresDsn
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.common.constants import Environment
 
 
 class Settings(BaseSettings):
-    # DATABASE_URL: PostgresDsn
+    DATABASE_URL: PostgresDsn
 
     ENVIRONMENT: Environment = Environment.DEVELOPMENT
 
@@ -13,8 +14,4 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = ["*"]
     CORS_HEADERS: list[str] = ["*"]
 
-    class Config:
-        env_file = ".env"
-
-
-settings = Settings()
+    model_config = SettingsConfigDict(env_file=".env")
