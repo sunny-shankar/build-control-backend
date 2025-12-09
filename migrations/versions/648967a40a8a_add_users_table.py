@@ -1,8 +1,8 @@
-"""create user table
+"""add users table
 
-Revision ID: 58148bb4e79f
+Revision ID: 648967a40a8a
 Revises:
-Create Date: 2025-12-09 00:03:04.344563
+Create Date: 2025-12-09 23:33:04.502942
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "58148bb4e79f"
+revision: str = "648967a40a8a"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -52,6 +52,9 @@ def upgrade() -> None:
         ),
         sa.Column("gstin", sqlmodel.sql.sqltypes.AutoString(length=15), nullable=True),
         sa.Column("pan", sqlmodel.sql.sqltypes.AutoString(length=10), nullable=True),
+        sa.Column(
+            "password", sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False
+        ),
         sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.Column("is_verified", sa.Boolean(), nullable=False),
         sa.PrimaryKeyConstraint("uuid"),

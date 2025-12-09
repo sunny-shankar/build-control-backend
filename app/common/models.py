@@ -1,8 +1,9 @@
 import uuid as uuid_pkg
-from datetime import datetime, timezone
+from datetime import datetime
 
-from sqlalchemy import DateTime, text
-from sqlmodel import Column, Field, SQLModel
+from sqlalchemy import text
+from sqlmodel import Field, SQLModel
+from app.utils.datetime import now_utc_naive
 
 
 class UUIDModel(SQLModel):
@@ -17,33 +18,19 @@ class UUIDModel(SQLModel):
 
 class TimestampModel(SQLModel):
     created_at: datetime = Field(
-        default=datetime.now(timezone.utc),
-        sa_column=Column(
-            DateTime(timezone=True),
-            server_default=text("CURRENT_TIMESTAMP"),
-            nullable=False,
-        ),
+        default_factory=now_utc_naive,
     )
 
     updated_at: datetime = Field(
-        default=datetime.now(timezone.utc),
-        sa_column=Column(
-            DateTime(timezone=True),
-            server_default=text("CURRENT_TIMESTAMP"),
-            onupdate=text("CURRENT_TIMESTAMP"),
-            nullable=False,
-        ),
+        default_factory=now_utc_naive,
     )
 
 
 class SoftDeleteMixin(SQLModel):
-    deleted_at: datetime | None = Field(
-        default=None,
-        sa_column=Column(DateTime(timezone=True), nullable=True),
-    )
+    deleted_at: datetime | None = Field(default=None)
 
     def soft_delete(self):
-        self.deleted_at = datetime.now(timezone.utc)
+        self.deleted_at = now_utc_naive()
 
     def restore(self):
         self.deleted_at = None

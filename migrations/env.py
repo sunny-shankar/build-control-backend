@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from sqlmodel import SQLModel
 from app.users.models import User  # noqa: F401
+from app.otp.models import OTP  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
