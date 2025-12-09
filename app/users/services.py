@@ -1,9 +1,13 @@
 from fastapi import HTTPException, status
+from passlib.context import CryptContext
 from app.users.models import User
 from app.users.repository import UserRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.users.schemas import UserCreateSchema
+
+# Password hashing context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class UserService:
@@ -41,8 +45,14 @@ class UserService:
                 detail="User with this email already exists",
             )
 
+        # Prepare user data
+        user_data_dict = payload.model_dump()
+
+        # Hash password if provided
+        user_data_dict["password"] = pwd_context.hash(user_data_dict["password"])
+
         # Persist user
-        user_data = User(**payload.model_dump())
+        user_data = User(**user_data_dict)
         user = await self.repo.create(user_data)
 
         # Transaction boundary

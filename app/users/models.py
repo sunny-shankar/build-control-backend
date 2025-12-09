@@ -52,6 +52,13 @@ class User(BaseSQLModel, table=True):
         index=True,
     )
 
+    # Authentication
+    password: str = Field(
+        nullable=False,
+        max_length=255,
+        description="Hashed password",
+    )
+
     # Flags
     is_active: bool = Field(default=True, nullable=False)
     is_verified: bool = Field(default=False, nullable=False)

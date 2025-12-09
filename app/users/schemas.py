@@ -30,3 +30,9 @@ class UserCreateSchema(BaseModel):
         default=None,
         max_length=10,  # standard PAN length
     )
+
+    password: str = Field(
+        min_length=6,
+        max_length=255,
+        description="User password",
+    )
