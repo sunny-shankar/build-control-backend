@@ -1,3 +1,4 @@
+import secrets
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.common.constants import Environment
@@ -14,7 +15,7 @@ class Settings(BaseSettings):
     CORS_HEADERS: list[str] = ["*"]
 
     # JWT Settings
-    JWT_SECRET_KEY: str = "your-secret-key-change-in-production"
+    JWT_SECRET_KEY: str = secrets.token_urlsafe(32)
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
