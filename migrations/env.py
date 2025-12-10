@@ -9,6 +9,7 @@ from alembic import context
 from sqlmodel import SQLModel
 from app.users.models import User  # noqa: F401
 from app.otp.models import OTP  # noqa: F401
+from app.projects.models import Project  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
