@@ -4,7 +4,7 @@ from jose import jwt
 from passlib.context import CryptContext
 from app.core import settings
 from app.users.models import User
-from app.otp.services import otp_service
+from app.otp.services import OTPService
 from app.users.repository import UserRepository
 from app.communication.sms import sms_provider
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -30,6 +30,7 @@ class UserService:
     def __init__(self, session: AsyncSession):
         self.session = session
         self.repo = UserRepository(session, User)
+        self.otp_service = OTPService(session)
 
     async def create_user(self, payload: UserCreateSchema) -> User:
         """
@@ -158,10 +159,10 @@ class UserService:
             )
 
         # Generate OTP
-        otp = otp_service.generate_otp(length=settings.OTP_LENGTH)
+        otp = self.otp_service.generate_otp(length=settings.OTP_LENGTH)
 
         # Store OTP
-        otp_service.store_otp(
+        await self.otp_service.store_otp(
             mobile_number=mobile_number,
             otp=otp,
             expiry_minutes=settings.OTP_EXPIRE_MINUTES,
@@ -171,7 +172,7 @@ class UserService:
         sms_sent = await sms_provider.send_otp(mobile_number, otp)
         if not sms_sent:
             # Clear stored OTP if SMS failed
-            otp_service.clear_otp(mobile_number)
+            await self.otp_service.clear_otp(mobile_number)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to send OTP. Please try again later.",
@@ -192,7 +193,7 @@ class UserService:
         - Generate and return JWT token
         """
         # Verify OTP
-        if not otp_service.verify_otp(mobile_number, otp):
+        if not await self.otp_service.verify_otp(mobile_number, otp):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid or expired OTP",
